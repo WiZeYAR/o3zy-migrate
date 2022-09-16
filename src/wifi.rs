@@ -25,7 +25,7 @@ pub fn wifi_setup() -> Result<(), Error> {
         std::thread::sleep(Duration::from_millis(250));
     };
 
-    trace!("Network beacons found: {:?}", &spots);
+    trace!("Network beacons found: {:#?}", &spots);
 
     let spots = spots
         .into_iter()
@@ -34,7 +34,7 @@ pub fn wifi_setup() -> Result<(), Error> {
         .take(10)
         .collect_vec();
 
-    trace!("Processed network list: {:?}", &spots);
+    trace!("Processed network list: {:#?}", &spots);
 
     let spot_strings = spots
         .iter()
@@ -83,10 +83,10 @@ network={{
             .arg("reconfigure"),
     )?;
 
-    info!("Waiting for 10 seconds to set the network up...");
+    info!("Waiting for the network (10 seconds) ...");
     std::thread::sleep(Duration::from_secs(10));
     info!("Testing the internet connection");
     online::sync::check(None).map_err(|x| Error::Other(Box::new(x)))?;
-    info!("Internet connection successful");
+    info!("Internet connection established");
     Ok(())
 }
