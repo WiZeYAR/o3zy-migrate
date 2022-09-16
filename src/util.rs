@@ -8,6 +8,8 @@ use std::{
 pub enum Error {
     IO(std::io::Error),
     CMD(Output),
+    Other(Box<dyn std::error::Error>),
+    Abort,
 }
 
 pub fn run_cmd(cmd: &mut Command) -> Result<String, Error> {
@@ -19,6 +21,7 @@ pub fn run_cmd(cmd: &mut Command) -> Result<String, Error> {
         }
     })
 }
+
 
 pub fn load_file(path: &str, src: &[u8]) -> Result<(), Error> {
     File::create(path)
