@@ -18,4 +18,5 @@ itertools = "0.10.4"
 log = "0.4.17"
 nom = "7.1.1"
 online = { version = "3.0.2", default-features = false, features = ["sync"] }
+simple_logger = "2.3.0"
 

@@ -11,6 +11,8 @@ pub const WLAN_DEVICE_NAME: &str = "wlan0";
 
 /* -------- MAIN SECTION -------- */
 fn main() -> Result<(), util::Error> {
+    simple_logger::init().unwrap();
+
     // Setting up WLAN, if required
     wifi::wifi_setup()?;
 
