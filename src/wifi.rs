@@ -16,19 +16,27 @@ pub fn wifi_setup() -> Result<(), Error> {
     }
 
     info!("Looking for possible WiFi spots...");
+
     let spots = loop {
         let spots = WiFi::scan()?;
         if !spots.is_empty() {
             break spots;
         }
         std::thread::sleep(Duration::from_millis(250));
-    }
-    .into_iter()
-    .filter(|WiFi { age, .. }| *age < 5000)
-    .sorted_by(|WiFi { signal: a, .. }, WiFi { signal: b, .. }| Ord::cmp(b, a))
-    .unique_by(|WiFi { ssid, .. }| ssid.clone())
-    .take(10)
-    .collect_vec();
+    };
+
+    trace!("Network beacons found: {:?}", &spots);
+
+    let spots = spots
+        .into_iter()
+        .filter(|WiFi { age, .. }| *age < 5000)
+        .sorted_by(|WiFi { signal: a, .. }, WiFi { signal: b, .. }| Ord::cmp(b, a))
+        .unique_by(|WiFi { ssid, .. }| ssid.clone())
+        .take(10)
+        .collect_vec();
+
+    trace!("Processed network list: {:?}", &spots);
+
     let spot_strings = spots
         .iter()
         .map(|WiFi { ssid, signal, .. }| format!("[Signal {}%]\tSSID: '{}'", signal, ssid))
@@ -53,7 +61,6 @@ pub fn wifi_setup() -> Result<(), Error> {
             .arg("-p")
             .arg("/etc/wpa_supplicant"),
     )?;
-
     let supplicant_file = format!(
         r#"
 country=IT
