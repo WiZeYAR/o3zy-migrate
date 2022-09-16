@@ -9,6 +9,12 @@ use std::process::Command;
 use std::time::Duration;
 
 pub fn wifi_setup() -> Result<(), Error> {
+    info!("Checking if the internet connection exists");
+    if let Ok(()) = online::sync::check(None) {
+        info!("Connection is already established");
+        return Ok(());
+    }
+
     info!("Looking for possible WiFi spots...");
     let spots = loop {
         let spots = WiFi::scan()?;
@@ -70,5 +76,11 @@ network={{
             .arg(WLAN_DEVICE_NAME)
             .arg("reconfigure"),
     )?;
+
+    info!("Waiting for 10 seconds to set the network up...");
+    std::thread::sleep(Duration::from_secs(10));
+    info!("Testing the internet connection");
+    online::sync::check(None).map_err(|x| Error::Other(Box::new(x)))?;
+    info!("Internet connection successful");
     Ok(())
 }

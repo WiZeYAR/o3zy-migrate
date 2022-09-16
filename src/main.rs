@@ -7,10 +7,13 @@ mod wifi_parse;
 pub const PATH_SH_SETUP: &str = "";
 pub const PATH_SH_UPDATE: &str = "";
 pub const GIT_REPO_PATH: &str = "";
-pub const WLAN_DEVICE_NAME: &str = "wlp174s0";
+pub const WLAN_DEVICE_NAME: &str = "wlan0";
 
 /* -------- MAIN SECTION -------- */
 fn main() -> Result<(), util::Error> {
+    // Setting up WLAN, if required
     wifi::wifi_setup()?;
+
+    // Terminating
     Ok(())
 }
