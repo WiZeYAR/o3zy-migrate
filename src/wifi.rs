@@ -29,7 +29,6 @@ pub fn wifi_setup() -> Result<(), Error> {
 
     let spots = spots
         .into_iter()
-        .filter(|WiFi { age, .. }| *age < 5000)
         .sorted_by(|WiFi { signal: a, .. }, WiFi { signal: b, .. }| Ord::cmp(b, a))
         .unique_by(|WiFi { ssid, .. }| ssid.clone())
         .take(10)
