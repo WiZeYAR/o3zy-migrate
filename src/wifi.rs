@@ -1,5 +1,5 @@
 use crate::util::{run_cmd, Error};
-use crate::wifi_parse::*;
+use crate::{wifi_parse::*, WLAN_DEVICE_NAME};
 use dialoguer::console::Term;
 use dialoguer::Input;
 use dialoguer::{theme::ColorfulTheme, Select};
@@ -41,16 +41,34 @@ pub fn wifi_setup() -> Result<(), Error> {
         .with_prompt(format!("Enter password for '{}'", ssid))
         .interact_text()
         .map_err(|e| Error::Other(Box::new(e)))?;
-    run_cmd(Command::new("sudo").arg("mkdir").arg("-p").arg("/etc/wpa_supplicant"))?;
-    run_cmd(Command::new("sudo").arg("bash").arg(
-     format!(
-        "printf \'{}\' >/etc/wpa_supplicant/wpa_supplicant.conf",
-        format!(
-            r#"country=IT\nctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\nupdate_config=1\mnetwork={{\nssid="{}"\npsk="{}"\n}}"#,
-            ssid, password
-        ),
-    )
-    // println!("{}", s);
-    ))?;
+    run_cmd(
+        Command::new("sudo")
+            .arg("mkdir")
+            .arg("-p")
+            .arg("/etc/wpa_supplicant"),
+    )?;
+
+    let supplicant_file = format!(
+        r#"
+country=IT
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+network={{
+    ssid="{}"
+    psk="{}"
+}}"#,
+        ssid, password
+    );
+    run_cmd(Command::new("bash").arg("-c").arg(format!(
+        "echo '{}' | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf",
+        supplicant_file
+    )))?;
+    run_cmd(
+        Command::new("sudo")
+            .arg("wpa_cli")
+            .arg("-i")
+            .arg(WLAN_DEVICE_NAME)
+            .arg("reconfigure"),
+    )?;
     Ok(())
 }
