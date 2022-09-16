@@ -1,0 +1,19 @@
+[package]
+name = "o3zy-migrate"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"
+
+[dependencies]
+itertools = "0.10.4"
+nom = "7.1.1"
+online = { version = "3.0.2", default-features = false, features = ["sync"] }
+
