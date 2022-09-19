@@ -13,6 +13,12 @@ pub enum Error {
 }
 
 pub fn run_cmd(cmd: &mut Command) -> Result<String, Error> {
+    let command_string = Some(cmd.get_program())
+        .into_iter()
+        .chain(cmd.get_args())
+        .map(|x| x.to_string_lossy())
+        .collect::<String>();
+    log::debug!("Running command:\t`{}`", command_string);
     let out = cmd
         .output()
         .map_err(Error::IO)
@@ -27,6 +33,10 @@ pub fn run_cmd(cmd: &mut Command) -> Result<String, Error> {
             log::error!("{:#?}", err);
             Err(err)
         });
+    log::debug!(
+        "Finished running command:\t`{}`",
+        command_string
+    );
     log::trace!("{:#?}", out);
     out
 }
