@@ -13,6 +13,7 @@ strip = true
 panic = "abort"
 
 [dependencies]
+const_format = "0.2.26"
 dialoguer = "0.10.2"
 itertools = "0.10.4"
 log = "0.4.17"

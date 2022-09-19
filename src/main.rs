@@ -4,12 +4,15 @@ pub const PATH_SH_SETUP: &str = "/home/o3zy/Desktop/setup.sh";
 pub const PATH_SH_UPDATE: &str = "/home/o3zy/Desktop/update.sh";
 pub const GIT_BRANCH: &str = "RELEASE";
 pub const GIT_REPO_PATH: &str = "/home/pi/Desktop/device-backend";
-pub const GIT_REPO_URL: &str = 
-    "https://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:x-oauth-basic@github.com/o3zy/device-backend.git";
+pub const GIT_REPO_URL: &str = formatcp!(
+    "https://{}:x-oauth-basic@github.com/o3zy/device-backend.git",
+    include_str!("../assets/github-token")
+);
 pub const WLAN_DEVICE_NAME: &str = "wlan0";
 
 /* -------- IMPORTS -------- */
 
+use const_format::formatcp;
 use std::process::Command;
 use util::*;
 
