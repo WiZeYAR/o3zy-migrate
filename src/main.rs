@@ -6,13 +6,13 @@ pub const GIT_BRANCH: &str = "RELEASE";
 pub const GIT_REPO_PATH: &str = "/home/pi/Desktop/device-backend";
 pub const GIT_REPO_URL: &str = formatcp!(
     "https://{}:x-oauth-basic@github.com/o3zy/device-backend.git",
-    include_str!("../assets/github-token")
+    str_replace!(include_str!("../assets/github-token"), '\n', ""),
 );
 pub const WLAN_DEVICE_NAME: &str = "wlan0";
 
 /* -------- IMPORTS -------- */
 
-use const_format::formatcp;
+use const_format::{formatcp, str_replace};
 use std::process::Command;
 use util::*;
 

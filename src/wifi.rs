@@ -7,6 +7,7 @@ use itertools::Itertools;
 use log::*;
 use std::process::Command;
 use std::time::Duration;
+use const_format::formatcp;
 
 pub fn setup() -> Result<(), Error> {
     info!("Checking if the internet connection exists");
@@ -71,12 +72,13 @@ network={{
 }}"#,
         ssid, password
     );
-    let interface_file = format!(
+    let interface_file = formatcp!(
         "auto {}
 iface {} inet manual
 wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
 ",
-        WLAN_DEVICE_NAME, WLAN_DEVICE_NAME
+        WLAN_DEVICE_NAME,
+        WLAN_DEVICE_NAME
     );
     run_cmd(Command::new("bash").arg("-c").arg(format!(
         "echo '{}' | sudo tee /etc/network/interfaces.d/{}",
