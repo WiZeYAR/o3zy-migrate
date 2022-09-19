@@ -13,13 +13,15 @@ pub enum Error {
 }
 
 pub fn run_cmd(cmd: &mut Command) -> Result<String, Error> {
-    cmd.output().map_err(Error::IO).and_then(|out| {
+    let out = cmd.output().map_err(Error::IO).and_then(|out| {
         if out.status.success() {
             Ok(String::from_utf8_lossy(&out.stdout).to_string())
         } else {
             Err(Error::CMD(out))
         }
-    })
+    });
+    log::trace!("{:#?}", out);
+    out
 }
 
 pub fn load_file(path: &str, src: &[u8]) -> Result<(), Error> {
