@@ -6,7 +6,7 @@ pub const GIT_BRANCH: &str = "RELEASE";
 pub const GIT_REPO_PATH: &str = "/home/pi/Desktop/device-backend";
 pub const GIT_REPO_URL: &str =
     "https://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@github.com/o3zy/device-backend";
-pub const WLAN_DEVICE_NAME: &str = "wlp174s0";
+pub const WLAN_DEVICE_NAME: &str = "wlan0";
 
 /* -------- IMPORTS -------- */
 

@@ -72,6 +72,17 @@ network={{
         ssid, password
     );
     run_cmd(Command::new("bash").arg("-c").arg(format!(
+        "echo '{}' | sudo tee /etc/network/interfaces.d/{}",
+        format!(
+            "auto {}
+iface {} inet manual
+wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+",
+            WLAN_DEVICE_NAME, WLAN_DEVICE_NAME
+        ),
+        WLAN_DEVICE_NAME
+    )))?;
+    run_cmd(Command::new("bash").arg("-c").arg(format!(
         "echo '{}' | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf",
         supplicant_file
     )))?;
