@@ -30,7 +30,7 @@ pub struct WiFi {
 
 impl WiFi {
     pub fn scan() -> Result<Vec<WiFi>, Error> {
-        let raw_data = run_cmd(Command::new("iwlist").arg(WLAN_DEVICE_NAME).arg("scan"))?;
+        let raw_data = run_cmd(Command::new("sudo").arg("iwlist").arg(WLAN_DEVICE_NAME).arg("scan"))?;
         let raw_entries: Vec<Vec<&str>> = {
             let mut entries = vec![];
             let mut entry = vec![];
