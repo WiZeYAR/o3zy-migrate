@@ -17,6 +17,8 @@ pub fn run_cmd(cmd: &mut Command) -> Result<String, Error> {
         .into_iter()
         .chain(cmd.get_args())
         .map(|x| x.to_string_lossy())
+        .map(|x| [x, " ".into()])
+        .flatten()
         .collect::<String>();
     log::debug!("Running command:\t`{}`", command_string);
     let out = cmd
@@ -33,10 +35,7 @@ pub fn run_cmd(cmd: &mut Command) -> Result<String, Error> {
             log::error!("{:#?}", err);
             Err(err)
         });
-    log::debug!(
-        "Finished running command:\t`{}`",
-        command_string
-    );
+    log::debug!("Finished running command:\t`{}`", command_string);
     log::trace!("{:#?}", out);
     out
 }
