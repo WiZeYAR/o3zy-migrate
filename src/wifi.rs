@@ -77,6 +77,12 @@ network={{
     )))?;
     run_cmd(
         Command::new("sudo")
+            .arg("systemctl")
+            .arg("restart")
+            .arg("dhcpcd"),
+    )?;
+    run_cmd(
+        Command::new("sudo")
             .arg("wpa_cli")
             .arg("-i")
             .arg(WLAN_DEVICE_NAME)
