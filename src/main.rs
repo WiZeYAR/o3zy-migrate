@@ -39,12 +39,13 @@ fn main() -> Result<(), Error> {
         // ---- CHECKING OUT REPO
         .and_then(|_| {
             util::run_cmd(
-                Command::new("git")
-                    .arg("clone")
-                    .arg("--branch")
-                    .arg(GIT_BRANCH)
-                    .arg(GIT_REPO_URL)
-                    .arg(GIT_REPO_PATH),
+                Command::new("su")
+                    .arg("-c")
+                    .arg(format!(
+                        "git clone --branch {} {} {}",
+                        GIT_BRANCH, GIT_REPO_URL, GIT_REPO_PATH
+                    ))
+                    .arg(""),
             )
         })
         //
@@ -78,9 +79,10 @@ fn main() -> Result<(), Error> {
                     .env("DEBIAN_FRONTEND", "noninteractive"),
             )?;
             run_cmd(
-                Command::new("npm")
-                    .arg("install")
-                    .arg("--prod")
+                Command::new("su")
+                    .arg("-c")
+                    .arg("npm install --prod")
+                    .arg("pi")
                     .current_dir(GIT_REPO_PATH),
             )
         })
