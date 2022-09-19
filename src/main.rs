@@ -4,8 +4,8 @@ pub const PATH_SH_SETUP: &str = "/home/o3zy/Desktop/setup.sh";
 pub const PATH_SH_UPDATE: &str = "/home/o3zy/Desktop/update.sh";
 pub const GIT_BRANCH: &str = "RELEASE";
 pub const GIT_REPO_PATH: &str = "/home/pi/Desktop/device-backend";
-pub const GIT_REPO_URL: &str =
-    "https://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@github.com/o3zy/device-backend";
+pub const GIT_REPO_URL: &str = 
+    "https://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:x-oauth-basic@github.com/o3zy/device-backend.git";
 pub const WLAN_DEVICE_NAME: &str = "wlan0";
 
 /* -------- IMPORTS -------- */
