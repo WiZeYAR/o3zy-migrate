@@ -8,7 +8,7 @@ use log::*;
 use std::process::Command;
 use std::time::Duration;
 
-pub fn wifi_setup() -> Result<(), Error> {
+pub fn setup() -> Result<(), Error> {
     info!("Checking if the internet connection exists");
     if let Ok(()) = online::sync::check(None) {
         info!("Connection is already established");
