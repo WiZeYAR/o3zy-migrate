@@ -3,7 +3,7 @@ use std::{
     ffi::OsStr,
     fs::File,
     io::Write,
-    path::Path,
+    path::{Path, PathBuf},
     process::{Command, Output},
 };
 
@@ -13,6 +13,19 @@ pub enum Error {
     CMD(Output),
     Other(Box<dyn std::error::Error>),
     Abort,
+}
+
+pub fn run_cmd_many<T: AsRef<str>>(
+    cmds: impl IntoIterator<Item = T>,
+    user: impl AsRef<str>,
+    dir: impl AsRef<str>,
+) -> Result<(), Error> {
+    let user = user.as_ref();
+    let dir = dir.as_ref();
+    cmds.into_iter()
+        .map(|cmd| run_cmd_as(cmd, user.clone(), dir.clone()))
+        .map(|_| Ok(()))
+        .fold(Ok(()), |a, b| a.and_then(|_| b))
 }
 
 pub fn run_cmd_as(
@@ -76,7 +89,10 @@ pub fn run_cmd(cmd: &mut Command) -> Result<String, Error> {
     out
 }
 
-pub fn load_file(path: &str, src: &[u8]) -> Result<(), Error> {
+pub fn load_file(path: impl AsRef<Path>, src: &[u8]) -> Result<(), Error> {
+    if let Some(dir) = path.as_ref().parent() {
+        std::fs::create_dir_all(dir).map_err(Error::IO)?;
+    }
     File::create(path)
         .and_then(|mut file| file.write(src))
         .map_err(Error::IO)
