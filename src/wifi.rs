@@ -86,7 +86,7 @@ wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
             )
             .into(),
             format!(
-                "echo '\"'\"'{}'\"'\"' | tee /etc/wpa_supplicant/wpa_supplicant.conf",
+                "echo '\"'{}'\"' | tee /etc/wpa_supplicant/wpa_supplicant.conf",
                 supplicant_file,
             )
             .into(),
