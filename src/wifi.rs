@@ -81,7 +81,7 @@ wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
         [
             Cow::from("mkdir -p wpa_supplicant"),
             format!(
-                "echo '\"'\"'{}'\"'\"' | tee /etc/network/interfaces.d/{}",
+                "echo '\"'{}'\"' | tee /etc/network/interfaces.d/{}",
                 interface_file, WLAN_DEVICE_NAME
             )
             .into(),
