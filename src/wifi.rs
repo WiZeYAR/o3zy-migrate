@@ -1,4 +1,4 @@
-use crate::util::{run_cmd, run_cmd_as, run_cmd_many, Error};
+use crate::util::{run_cmd_many, Error};
 use crate::{wifi_parse::*, WLAN_DEVICE_NAME};
 use const_format::formatcp;
 use dialoguer::console::Term;
@@ -7,7 +7,6 @@ use dialoguer::{theme::ColorfulTheme, Select};
 use itertools::Itertools;
 use log::*;
 use std::borrow::Cow;
-use std::process::Command;
 use std::time::Duration;
 
 pub fn setup() -> Result<(), Error> {
@@ -81,12 +80,12 @@ wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
         [
             Cow::from("mkdir -p wpa_supplicant"),
             format!(
-                "echo '\"'{}'\"' | tee /etc/network/interfaces.d/{}",
+                "echo {} | tee /etc/network/interfaces.d/{}",
                 interface_file, WLAN_DEVICE_NAME
             )
             .into(),
             format!(
-                "echo '\"'{}'\"' | tee /etc/wpa_supplicant/wpa_supplicant.conf",
+                "echo {} | tee /etc/wpa_supplicant/wpa_supplicant.conf",
                 supplicant_file,
             )
             .into(),

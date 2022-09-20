@@ -1,9 +1,8 @@
 use std::{
     convert::AsRef,
-    ffi::OsStr,
     fs::File,
     io::Write,
-    path::{Path, PathBuf},
+    path::{Path, },
     process::{Command, Output},
 };
 
