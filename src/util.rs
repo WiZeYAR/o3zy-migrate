@@ -1,6 +1,9 @@
 use std::{
+    convert::AsRef,
+    ffi::OsStr,
     fs::File,
     io::Write,
+    path::Path,
     process::{Command, Output},
 };
 
@@ -12,6 +15,39 @@ pub enum Error {
     Abort,
 }
 
+pub fn run_cmd_as(
+    cmd: impl AsRef<str>,
+    user: impl AsRef<str>,
+    dir: impl AsRef<str>,
+) -> Result<String, Error> {
+    log::debug!(
+        "Running command `{}` at `{}` on behalf of `{}`",
+        cmd.as_ref(),
+        user.as_ref(),
+        dir.as_ref()
+    );
+    let res = match Command::new("su")
+        .arg("-c")
+        .arg(cmd.as_ref())
+        .arg(user.as_ref())
+        .current_dir(dir.as_ref())
+        .output()
+        .map_err(Error::IO)?
+    {
+        Output { status, stdout, .. } if status.success() => {
+            log::debug!("Finished running command `{}`", cmd.as_ref());
+            Ok(String::from_utf8_lossy(&stdout).to_string())
+        }
+        output => {
+            log::error!("Error running command `{}`", cmd.as_ref());
+            Err(Error::CMD(output))
+        }
+    };
+    log::trace!("{:#?}", res);
+    res
+}
+
+#[deprecated]
 pub fn run_cmd(cmd: &mut Command) -> Result<String, Error> {
     let command_string = Some(cmd.get_program())
         .into_iter()
