@@ -1,4 +1,4 @@
-use crate::util::{run_cmd, run_cmd_as, Error};
+use crate::util::{run_cmd, run_cmd_as, run_cmd_many, Error};
 use crate::{wifi_parse::*, WLAN_DEVICE_NAME};
 use const_format::formatcp;
 use dialoguer::console::Term;
@@ -77,25 +77,25 @@ wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
         WLAN_DEVICE_NAME
     );
 
-    [
-        "mkdir -p wpa_supplicant".into(),
-        format!(
-            "echo '\"'\"'{}'\"'\"' | tee /etc/network/interfaces.d/{}",
-            interface_file, WLAN_DEVICE_NAME
-        )
-        .into(),
-        format!(
-            "echo '\"'\"'{}'\"'\"' | /etc/wpa_supplicant/wpa_supplicant.conf",
-            supplicant_file,
-        )
-        .into(),
-        "systemctl restart dhcpcd".into(),
-        formatcp!("wpa_cli -i {} reconfigure", WLAN_DEVICE_NAME).into(),
-    ]
-    .into_iter()
-    .map(|x: Cow<'_, str>| run_cmd_as(x, "root", "/"))
-    .map(|_| Ok(()))
-    .fold(Ok(()), |a, b| a.and_then(|_| b))?;
+    run_cmd_many(
+        [
+            Cow::from("mkdir -p wpa_supplicant"),
+            format!(
+                "echo '\"'\"'{}'\"'\"' | tee /etc/network/interfaces.d/{}",
+                interface_file, WLAN_DEVICE_NAME
+            )
+            .into(),
+            format!(
+                "echo '\"'\"'{}'\"'\"' | tee /etc/wpa_supplicant/wpa_supplicant.conf",
+                supplicant_file,
+            )
+            .into(),
+            "systemctl restart dhcpcd".into(),
+            formatcp!("wpa_cli -i {} reconfigure", WLAN_DEVICE_NAME).into(),
+        ],
+        "root",
+        "/",
+    )?;
 
     info!("Waiting for the network (10 seconds) ...");
     std::thread::sleep(Duration::from_secs(10));
