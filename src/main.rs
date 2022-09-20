@@ -45,7 +45,7 @@ fn main() -> Result<(), Error> {
                         "git clone --branch {} {} {}",
                         GIT_BRANCH, GIT_REPO_URL, GIT_REPO_PATH
                     ))
-                    .arg(""),
+                    .arg("pi"),
             )
         })
         //

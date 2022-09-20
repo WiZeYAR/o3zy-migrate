@@ -1,13 +1,14 @@
-use crate::util::{run_cmd, Error};
+use crate::util::{run_cmd, run_cmd_as, Error};
 use crate::{wifi_parse::*, WLAN_DEVICE_NAME};
+use const_format::formatcp;
 use dialoguer::console::Term;
 use dialoguer::Input;
 use dialoguer::{theme::ColorfulTheme, Select};
 use itertools::Itertools;
 use log::*;
+use std::borrow::Cow;
 use std::process::Command;
 use std::time::Duration;
-use const_format::formatcp;
 
 pub fn setup() -> Result<(), Error> {
     info!("Checking if the internet connection exists");
@@ -55,12 +56,7 @@ pub fn setup() -> Result<(), Error> {
         .with_prompt(format!("Enter password for '{}'", ssid))
         .interact_text()
         .map_err(|e| Error::Other(Box::new(e)))?;
-    run_cmd(
-        Command::new("sudo")
-            .arg("mkdir")
-            .arg("-p")
-            .arg("/etc/wpa_supplicant"),
-    )?;
+
     let supplicant_file = format!(
         r#"
 country=IT
@@ -80,27 +76,26 @@ wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
         WLAN_DEVICE_NAME,
         WLAN_DEVICE_NAME
     );
-    run_cmd(Command::new("bash").arg("-c").arg(format!(
-        "echo '{}' | sudo tee /etc/network/interfaces.d/{}",
-        interface_file, WLAN_DEVICE_NAME
-    )))?;
-    run_cmd(Command::new("bash").arg("-c").arg(format!(
-        "echo '{}' | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf",
-        supplicant_file
-    )))?;
-    run_cmd(
-        Command::new("sudo")
-            .arg("systemctl")
-            .arg("restart")
-            .arg("dhcpcd"),
-    )?;
-    run_cmd(
-        Command::new("sudo")
-            .arg("wpa_cli")
-            .arg("-i")
-            .arg(WLAN_DEVICE_NAME)
-            .arg("reconfigure"),
-    )?;
+
+    [
+        "mkdir -p wpa_supplicant".into(),
+        format!(
+            "echo '\"'\"'{}'\"'\"' | tee /etc/network/interfaces.d/{}",
+            interface_file, WLAN_DEVICE_NAME
+        )
+        .into(),
+        format!(
+            "echo '\"'\"'{}'\"'\"' | /etc/wpa_supplicant/wpa_supplicant.conf",
+            supplicant_file,
+        )
+        .into(),
+        "systemctl restart dhcpcd".into(),
+        formatcp!("wpa_cli -i {} reconfigure", WLAN_DEVICE_NAME).into(),
+    ]
+    .into_iter()
+    .map(|x: Cow<'_, str>| run_cmd_as(x, "root", "/"))
+    .map(|_| Ok(()))
+    .fold(Ok(()), |a, b| a.and_then(|_| b))?;
 
     info!("Waiting for the network (10 seconds) ...");
     std::thread::sleep(Duration::from_secs(10));
