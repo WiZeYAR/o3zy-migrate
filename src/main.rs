@@ -72,7 +72,7 @@ fn main() -> Result<(), Error> {
             run_cmd_many(
                 [
                     "npm i -g pm2",
-                    "pm2 start server.js",
+                    "pm2 start -f server.js",
                     "pm2 startup",
                     "pm2 save",
                 ],
