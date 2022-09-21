@@ -89,7 +89,14 @@ fn main() -> Result<(), Error> {
         //
         // ---- SETTING UP PM
         .and_then(|_| run_cmd(Command::new("npm").arg("i").arg("-g").arg("pm2")))
-        .and_then(|_| run_cmd(Command::new("pm2").arg("start").arg("server.js")))
+        .and_then(|_| {
+            run_cmd(
+                Command::new("pm2")
+                    .arg("start")
+                    .arg("server.js")
+                    .current_dir(formatcp!("{}/server.js", GIT_REPO_PATH)),
+            )
+        })
         .and_then(|_| run_cmd(Command::new("pm2").arg("startup")))
         .and_then(|_| run_cmd(Command::new("pm2").arg("save")))
         //
