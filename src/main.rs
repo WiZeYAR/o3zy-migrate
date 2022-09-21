@@ -94,7 +94,8 @@ fn main() -> Result<(), Error> {
                 Command::new("pm2")
                     .arg("start")
                     .arg("server.js")
-                    .current_dir(formatcp!("{}/server.js", GIT_REPO_PATH)),
+
+                    .current_dir(GIT_REPO_PATH),
             )
         })
         .and_then(|_| run_cmd(Command::new("pm2").arg("startup")))
