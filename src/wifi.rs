@@ -79,15 +79,14 @@ wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
     run_cmd_many(
         [
             Cow::from("mkdir -p wpa_supplicant"),
-            
-            format!("echo '{}' | tee /etc/network/interfaces.d/{}", interface_file,WLAN_DEVICE_NAME).into(),
+            format!("echo '{}' | tee /etc/network/interfaces", interface_file).into(),
             format!(
                 "echo '{}' | tee /etc/wpa_supplicant/wpa_supplicant.conf",
-                supplicant_file, 
+                supplicant_file,
             )
             .into(),
-            "systemctl restart dhcpcd".into(),
             formatcp!("wpa_cli -i {} reconfigure", WLAN_DEVICE_NAME).into(),
+            "systemctl restart dhcpcd".into(),
         ],
         "root",
         "/",
