@@ -2,7 +2,7 @@ use std::{
     convert::AsRef,
     fs::File,
     io::Write,
-    path::{Path, },
+    path::Path,
     process::{Command, Output},
 };
 
@@ -21,10 +21,10 @@ pub fn run_cmd_many<T: AsRef<str>>(
 ) -> Result<(), Error> {
     let user = user.as_ref();
     let dir = dir.as_ref();
-    cmds.into_iter()
-        .map(|cmd| run_cmd_as(cmd, user.clone(), dir.clone()))
-        .map(|_| Ok(()))
-        .fold(Ok(()), |a, b| a.and_then(|_| b))
+    for cmd in cmds {
+        run_cmd_as(cmd, user, dir)?;
+    }
+    Ok(())
 }
 
 pub fn run_cmd_as(

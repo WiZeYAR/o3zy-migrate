@@ -29,7 +29,7 @@ fn main() -> Result<(), Error> {
         // ---- SETTING THE INTERNET UP
         .and_then(|_| wifi::setup())
         //
-        // ---- UPGRADING SYSTEM AND INSTALLING NODE 
+        // ---- UPGRADING SYSTEM AND INSTALLING NODE
         .and_then(|_| {
             run_cmd_many(
                 [
@@ -54,6 +54,7 @@ fn main() -> Result<(), Error> {
                         GIT_REPO_URL,
                         GIT_REPO_PATH
                     ),
+                    "chmod -R u+x scripts/",
                     "npm i --prod",
                     "npm i -g pm2",
                     "pm2 start server.js",
