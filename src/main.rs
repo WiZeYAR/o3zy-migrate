@@ -40,7 +40,7 @@ fn main() -> Result<(), Error> {
                     "systemctl disable nodered.service",
                 ],
                 "root",
-                GIT_REPO_PATH,
+                "/"
             )
         })
         //
