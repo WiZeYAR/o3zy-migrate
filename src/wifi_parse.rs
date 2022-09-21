@@ -1,7 +1,8 @@
 use crate::{
-    util::{run_cmd, Error},
+    util::{run_cmd, Error, run_cmd_as},
     WLAN_DEVICE_NAME,
 };
+use const_format::formatcp;
 use itertools::*;
 use nom::{
     self, bytes::streaming::tag, character::complete::alphanumeric1, number::complete::float,
@@ -30,7 +31,7 @@ pub struct WiFi {
 
 impl WiFi {
     pub fn scan() -> Result<Vec<WiFi>, Error> {
-        let raw_data = run_cmd(Command::new("sudo").arg("iwlist").arg(WLAN_DEVICE_NAME).arg("scan"))?;
+        let raw_data = run_cmd_as(formatcp!("iwlist {} scan",WLAN_DEVICE_NAME,) , "wize", "/")?;
         let raw_entries: Vec<Vec<&str>> = {
             let mut entries = vec![];
             let mut entry = vec![];
