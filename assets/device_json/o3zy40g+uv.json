@@ -1,0 +1,181 @@
+{
+  "Data": {
+    "Company": "61f282540eacd62b6086d1ce",
+    "Code": "O3ZYCODE",
+    "ReservedArea": "31550062",
+    "Status": "test",
+    "Lot": 2
+  },
+  "Model": {
+    "Code": "air_light_40",
+    "Name": "AIR+LIGHT 40"
+  },
+  "Settings": {
+    "UvCycleMinimumDuration": 1800000,
+    "UvCycleDefaultDuration": 3600000,
+    "CycleAcceptInterval": 60000,
+    "DeviceRetryLoginInterval": 30000,
+    "DeviceOzoneStateInterval": 10000,
+    "DeviceUvStateInterval": 20000,
+    "DeviceScreensaverInterval": 300000,
+    "UvFansSpeedTargets": 2,
+    "UvFansDefaultDutyCycles": 50,
+    "OzonePlatesFansDutyCycles": 100,
+    "UvFansMaxTimeTooSlow": 120000,
+    "OzoneMeasureDecimals": 3,
+    "DebugOzoneMeasuresLogFile": "/home/pi/Desktop/device-backend/cycle.txt",
+    "DebugOzoneSafeLevel": 0.25,
+    "OzoneSafeLevel": 0.25,
+    "CantHoldOzoneRatio": 0.33,
+    "PirSignalItems": 3,
+    "PirSignalTimeframe": 45000,
+    "OzonePlateMinTimeOn": 5000,
+    "OzonePlateMinTimeOff": 5000,
+    "OzonePlateMaxTimeOn": 1800000,
+    "OzoneCycleExponentialSmoothingAlphas": [
+      0.5,
+      0.25,
+      0.125,
+      0.0625,
+      0.03125
+    ],
+    "DebugOzoneCycleWarmupTime": 20000,
+    "OzoneCycleWarmupTime": 20000,
+    "OzoneCyclePostFilterTimeIfNotRising": 600000,
+    "OzoneCyclePostFilterTime": 180000,
+    "OzoneCycleNotRisingTime": 900000,
+    "OzoneCycleNotFilteringTime": 4500000,
+    "OzoneCycleCantRiseTime": 1800000,
+    "OzoneCycleCantHoldTime": 300000,
+    "IntervalCalcCyclePercentage": 20000,
+    "OzoneCycleRisePercentage": 10,
+    "OzoneCycleHoldPercentage": 55,
+    "OzoneCycleFilterPercentage": 35,
+    "VoltageDoesntChangeInterval": 90000,
+    "OzoneSensorReadInterval": 2500,
+    "UvSensorReadInterval": 2500,
+    "OzoneCycleControlProcessInterval": 5000,
+    "IntervalCheckWifiConnection": 5000,
+    "OzoneVirtualLevelsDelta": 0.75,
+    "CycleStatesCountToUpload": 10,
+    "AllowedOfflineUvCycles": 10,
+    "AllowedOfflineOzoneCycles": 10,
+    "DeleteExecutedCyclesAfter": 604800000,
+    "DefaultScriptTimeout": 10000,
+    "UvFansSpeedCoefficient": 1,
+    "OzoneFansSpeedCoefficient": 1,
+    "UvLampFanSpeedReadInterval": 1500,
+    "OzonePlateFanSpeedReadInterval": 1500,
+    "UvLampFanSpeedTolerance": 0,
+    "RequiredSoftwareVersion": "3.0.16",
+    "RepoDeviceBackend": "https://github.com/o3zy/device-backend/tree/RELEASE",
+    "TokenRepoDeviceBackend": "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",
+    "CheckUpdateStartupDelay": 60000,
+    "UpdateScriptTimeout": 600000,
+    "UpdateCloneRepoTimeout": 300000,
+    "UpdateNpmInstallTimeout": 600000,
+    "Modes": [
+      "ozone",
+      "uv"
+    ],
+    "PirsCount": 4,
+    "PlatesCount": 4,
+    "UvLampsCount": 1,
+    "RequiredPlatesCount": 2,
+    "OzoneCycles": [
+      {
+        "Id": "628deece52f35774e570efc0",
+        "Code": "premium",
+        "Ppm": 6,
+        "Time": 3600000,
+        "Order": -1,
+        "IsSuggested": true
+      },
+      {
+        "Id": "621dfdb2250c6cdea01df878",
+        "Code": "viruses",
+        "Ppm": 4.2,
+        "Time": 1800000,
+        "Order": 0
+      },
+      {
+        "Id": "621dfdb2250c6cdea01df879",
+        "Code": "bacteria",
+        "Ppm": 2.2,
+        "Time": 3600000,
+        "Order": 1
+      },
+      {
+        "Id": "621dfdb2250c6cdea01df87a",
+        "Code": "mush_molds",
+        "Ppm": 2,
+        "Time": 3600000,
+        "Order": 2
+      },
+      {
+        "Id": "621dfdb2250c6cdea01df87b",
+        "Code": "insects",
+        "Ppm": 2,
+        "Time": 1800000,
+        "Order": 3
+      },
+      {
+        "Id": "621dfdb2250c6cdea01df87c",
+        "Code": "programma_uno",
+        "Ppm": 6,
+        "Time": 3600000,
+        "IsTest": true,
+        "Order": 4,
+        "DontShow": true
+      },
+      {
+        "Id": "621dfdb2250c6cdea01df87d",
+        "Code": "programma_due",
+        "Ppm": 4.5,
+        "Time": 3600000,
+        "IsTest": true,
+        "Order": 5,
+        "DontShow": true
+      },
+      {
+        "Id": "621dfdb2250c6cdea01df87e",
+        "Code": "test",
+        "Ppm": 6,
+        "Time": 3600000,
+        "IsTest": true,
+        "Order": 6,
+        "DontShow": true
+      },
+      {
+        "Id": "621dfdb2250c6cdea01df87f",
+        "Code": "test1",
+        "Ppm": 4,
+        "Time": 3600000,
+        "IsTest": true,
+        "Order": 7,
+        "DontShow": true
+      },
+      {
+        "Id": "624165c07b417b0a06703958",
+        "Code": "test_lab",
+        "Ppm": 6,
+        "Time": 3600000,
+        "Order": 8,
+        "DontShow": true
+      },
+      {
+        "Id": "624167a67b417b0a06703959",
+        "Code": "test_lab2",
+        "Order": 9,
+        "Ppm": 2,
+        "Time": 10800000,
+        "DontShow": true
+      }
+    ]
+  },
+  "Users": [],
+  "Rooms": [],
+  "Schedule": [],
+  "AllowGuests": true,
+  "CanSanitize": true
+}
