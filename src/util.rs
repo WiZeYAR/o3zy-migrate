@@ -35,8 +35,8 @@ pub fn run_cmd_as(
     log::debug!(
         "Running command `{}` at `{}` on behalf of `{}`",
         cmd.as_ref(),
+        dir.as_ref(),
         user.as_ref(),
-        dir.as_ref()
     );
     let res = match Command::new("su")
         .arg("-c")
