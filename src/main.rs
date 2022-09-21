@@ -40,20 +40,31 @@ fn main() -> Result<(), Error> {
                     "systemctl disable nodered.service",
                 ],
                 "root",
-                "/"
+                "/",
             )
         })
         //
         // ---- DEPLOYING NODE PROJECT
-        .and_then(|_| {
-            run_cmd_many(
-                [
+        .and_then(
+
+            |_|
+run_cmd_as(
+
+
                     formatcp!(
                         "git clone --branch {} {} {}",
                         GIT_BRANCH,
                         GIT_REPO_URL,
                         GIT_REPO_PATH
-                    ),
+                    )
+
+    , "pi", "/")
+
+
+            )
+        .and_then(|_| {
+            run_cmd_many(
+                [
                     "chmod -R u+x scripts/",
                     "npm i --prod",
                 ],
