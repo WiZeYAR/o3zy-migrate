@@ -1,14 +1,15 @@
 /* -------- CONSTANTS -------- */
 
-pub const PATH_SH_SETUP: &str = "/home/o3zy/Desktop/setup.sh";
-pub const PATH_SH_UPDATE: &str = "/home/o3zy/Desktop/update.sh";
-pub const GIT_BRANCH: &str = "RELEASE";
-pub const GIT_REPO_PATH: &str = "/home/pi/Desktop/device-backend";
-pub const GIT_REPO_URL: &str = formatcp!(
+const PATH_SH_SETUP: &str = "/home/o3zy/Desktop/setup.sh";
+const PATH_SH_UPDATE: &str = "/home/o3zy/Desktop/update.sh";
+const GIT_BRANCH: &str = "RELEASE";
+const GIT_REPO_PATH: &str = "/home/pi/Desktop/device-backend";
+const GIT_REPO_URL: &str = formatcp!(
     "https://{}:x-oauth-basic@github.com/o3zy/device-backend.git",
     str_replace!(include_str!("../assets/github-token"), '\n', ""),
 );
-pub const WLAN_DEVICE_NAME: &str = "wlan0";
+const NODE_RED_CONFIG_PATH: &str = "/home/pi/.node-red/info/global/global.json";
+const WLAN_DEVICE_NAME: &str = "wlan0";
 
 /* -------- IMPORTS -------- */
 
@@ -17,6 +18,7 @@ use util::*;
 
 /* -------- MODULES -------- */
 
+mod device_json;
 mod util;
 mod wifi;
 mod wifi_parse;
@@ -45,29 +47,21 @@ fn main() -> Result<(), Error> {
         })
         //
         // ---- DEPLOYING NODE PROJECT
-        .and_then(
-
-            |_|
-run_cmd_as(
-
-
-                    formatcp!(
-                        "git clone --branch {} {} {}",
-                        GIT_BRANCH,
-                        GIT_REPO_URL,
-                        GIT_REPO_PATH
-                    )
-
-    , "pi", "/")
-
-
+        .and_then(|_| {
+            run_cmd_as(
+                formatcp!(
+                    "git clone --branch {} {} {}",
+                    GIT_BRANCH,
+                    GIT_REPO_URL,
+                    GIT_REPO_PATH
+                ),
+                "pi",
+                "/",
             )
+        })
         .and_then(|_| {
             run_cmd_many(
-                [
-                    "chmod -R u+x scripts/",
-                    "npm i --prod",
-                ],
+                ["chmod -R u+x scripts/", "npm i --prod"],
                 "pi",
                 GIT_REPO_PATH,
             )
@@ -88,7 +82,7 @@ run_cmd_as(
         })
         //
         // ---- SETTING UP DEVICE.JSON
-        .and_then(|_| Ok(()))
+        .and_then(|_| device_json::setup())
         //
         // ---- REBOOTING
         .and_then(|_| run_cmd_as("shutdown -r", "root", "/"))
