@@ -33,7 +33,7 @@ fn main() -> Result<(), Error> {
         .and_then(|_| {
             run_cmd_many(
                 [
-                    "curl -fsSL https://deb.nodesource.com/setup_14.x | bash -",
+                    "curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -",
                     "DEBIAN_FRONTEND=noninteractive apt-get update",
                     "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade",
                     "DEBIAN_FRONTEND=noninteractive apt-get -y install nodejs",
