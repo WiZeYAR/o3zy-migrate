@@ -13,7 +13,6 @@ pub const WLAN_DEVICE_NAME: &str = "wlan0";
 /* -------- IMPORTS -------- */
 
 use const_format::{formatcp, str_replace};
-use std::process::Command;
 use util::*;
 
 /* -------- MODULES -------- */
@@ -30,90 +29,46 @@ fn main() -> Result<(), Error> {
         // ---- SETTING THE INTERNET UP
         .and_then(|_| wifi::setup())
         //
-        // ---- DEPLOYING SETUP SH
-        .and_then(|_| util::load_file(PATH_SH_SETUP, include_bytes!("../assets/update.sh")))
-        //
-        // ---- DEPLOYING UPDATE SH
-        .and_then(|_| util::load_file(PATH_SH_UPDATE, include_bytes!("../assets/update.sh")))
-        //
-        // ---- CHECKING OUT REPO
-        .and_then(|_| {
-            util::run_cmd(
-                Command::new("su")
-                    .arg("-c")
-                    .arg(format!(
-                        "git clone --branch {} {} {}",
-                        GIT_BRANCH, GIT_REPO_URL, GIT_REPO_PATH
-                    ))
-                    .arg("pi"),
-            )
-        })
-        //
         // ---- UPGRADING SYSTEM AND INSTALLING DEPENDENCIES
         .and_then(|_| {
-            run_cmd(
-                Command::new("sudo")
-                    .arg("bash")
-                    .arg("-c")
-                    .arg("curl -fsSL https://deb.nodesource.com/setup_14.x | bash -"),
-            )?;
-            run_cmd(
-                Command::new("sudo")
-                    .arg("apt-get")
-                    .arg("update")
-                    .env("DEBIAN_FRONTEND", "noninteractive"),
-            )?;
-            run_cmd(
-                Command::new("sudo")
-                    .arg("apt-get")
-                    .arg("upgrade")
-                    .arg("-y")
-                    .env("DEBIAN_FRONTEND", "noninteractive"),
-            )?;
-            run_cmd(
-                Command::new("sudo")
-                    .arg("apt-get")
-                    .arg("install")
-                    .arg("-y")
-                    .arg("nodejs")
-                    .env("DEBIAN_FRONTEND", "noninteractive"),
-            )?;
-            run_cmd(
-                Command::new("su")
-                    .arg("-c")
-                    .arg("npm install --prod")
-                    .arg("pi")
-                    .current_dir(GIT_REPO_PATH),
+            run_cmd_many(
+                [
+                    "curl -fsSL https://deb.nodesource.com/setup_14.x | bash -",
+                    "DEBIAN_FRONTEND=noninteractive apt-get update",
+                    "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade",
+                    "DEBIAN_FRONTEND=noninteractive apt-get -y install nodejs",
+                    "systemctl disable nodered.service",
+                ],
+                "root",
+                "/",
             )
         })
+        .and_then(|_| run_cmd_as("npm install --prod", "pi", GIT_REPO_PATH))
         //
-        // ---- SETTING UP PM
-        .and_then(|_| run_cmd(Command::new("npm").arg("i").arg("-g").arg("pm2")))
+        // ---- DEPLOYING NODE PROJECT
         .and_then(|_| {
-            run_cmd(
-                Command::new("pm2")
-                    .arg("start")
-                    .arg("server.js")
-
-                    .current_dir(GIT_REPO_PATH),
-            )
-        })
-        .and_then(|_| run_cmd(Command::new("pm2").arg("startup")))
-        .and_then(|_| run_cmd(Command::new("pm2").arg("save")))
-        //
-        // ---- STOPPING NODE-RED
-        .and_then(|_| {
-            run_cmd(
-                Command::new("sudo")
-                    .arg("systemctl")
-                    .arg("disable")
-                    .arg("nodered.service"),
+            run_cmd_many(
+                [
+                    formatcp!(
+                        "git clone --branch {} {} {}",
+                        GIT_BRANCH,
+                        GIT_REPO_URL,
+                        GIT_REPO_PATH
+                    ),
+                    "npm i -g pm2",
+                    "pm2 start server.js",
+                    "pm2 startup",
+                    "pm2 save",
+                ],
+                "pi",
+                GIT_REPO_PATH,
             )
         })
         //
         // ---- SETTING UP DEVICE.JSON
-        .and_then(|_| todo!())
+        .and_then(|_| Ok(()))
+        //
         // ---- REBOOTING
-        .and_then(|()| run_cmd(Command::new("sudo").arg("shutdown").arg("-r")))
+        .and_then(|_| run_cmd_as("shutdown -r", "root", "/"))
         .and(Ok(()))
 }
