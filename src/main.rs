@@ -40,7 +40,7 @@ fn main() -> Result<(), Error> {
                     "systemctl disable nodered.service",
                 ],
                 "root",
-                "/",
+                GIT_REPO_PATH,
             )
         })
         //
@@ -56,12 +56,22 @@ fn main() -> Result<(), Error> {
                     ),
                     "chmod -R u+x scripts/",
                     "npm i --prod",
+                ],
+                "pi",
+                GIT_REPO_PATH,
+            )
+        })
+        //
+        // ---- SETTING UP PM2
+        .and_then(|_| {
+            run_cmd_many(
+                [
                     "npm i -g pm2",
                     "pm2 start server.js",
                     "pm2 startup",
                     "pm2 save",
                 ],
-                "pi",
+                "root",
                 GIT_REPO_PATH,
             )
         })
