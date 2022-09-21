@@ -31,7 +31,7 @@ pub struct WiFi {
 
 impl WiFi {
     pub fn scan() -> Result<Vec<WiFi>, Error> {
-        let raw_data = run_cmd_as(formatcp!("iwlist {} scan",WLAN_DEVICE_NAME,) , "wize", "/")?;
+        let raw_data = run_cmd_as(formatcp!("iwlist {} scan",WLAN_DEVICE_NAME,) , "root", "/")?;
         let raw_entries: Vec<Vec<&str>> = {
             let mut entries = vec![];
             let mut entry = vec![];
