@@ -35,7 +35,7 @@ fn main() -> Result<(), Error> {
         .and_then(|_| {
             run_cmd_many(
                 [
-                    "DEBIAN_FRONTEND=noninteractive apt-get update",
+                    "DEBIAN_FRONTEND=noninteractive apt-get -y update",
                     "curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -",
                     "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade",
                     "DEBIAN_FRONTEND=noninteractive apt-get -y install nodejs",
