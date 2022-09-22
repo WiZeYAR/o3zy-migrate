@@ -1,5 +1,6 @@
 use crate::util::Error;
 use crate::{GIT_REPO_PATH, NODE_RED_CONFIG_PATH};
+use const_format::formatcp;
 use serde_derive::Deserialize;
 use serde_json::{json, Value};
 
@@ -33,7 +34,10 @@ pub fn setup() -> Result<(), Error> {
         .and_then(|map| map.get_mut("Code"))
         .map(|val| *val = json!(code))
         .expect("An included device.json template has a wrong format (no Device.Code)");
-    std::fs::write(GIT_REPO_PATH, serde_json::to_string(&device_json).unwrap())
-        .map_err(Error::IO)?;
+    std::fs::write(
+        formatcp!("{}/device.json", GIT_REPO_PATH),
+        serde_json::to_string(&device_json).unwrap(),
+    )
+    .map_err(Error::IO)?;
     Ok(())
 }
